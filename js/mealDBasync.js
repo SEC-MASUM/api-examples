@@ -1,31 +1,26 @@
-document.getElementById("error-message").style.display = "none";
 const searchInput = document.getElementById("search-input");
 // Load Data
-const loadData = () => {
+const loadData = async () => {
   const searchInputValue = searchInput.value;
-  /*  if (searchInputValue === "") {
-    console.log("Please write food name");
-  } 
-  else{
-  
-  }*/
   // Clear
   searchInput.value = "";
-  document.getElementById("error-message").style.display = "none";
   //   console.log(searchInputValue);
   const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchInputValue}`;
-  fetch(url)
-    .then((response) => response.json())
-    .then((data) => displayData(data))
-    .catch((error) => displayError(error));
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    displayData(data);
+  } catch (error) {
+    console.log(error);
+  }
+
+  //   fetch(url)
+  //     .then((response) => response.json())
+  //     .then((data) => displayData(data));
 };
 
 // loadData();
-
-// Error Display
-const displayError = (error)=>{
-  document.getElementById("error-message").style.display = "block";
-}
 
 // Display Data
 const displayData = (data) => {
@@ -33,9 +28,6 @@ const displayData = (data) => {
   const mealsDiv = document.getElementById("meals");
   mealsDiv.textContent = "";
 
-  /* if (meals.length == 0) {
-    // show no result found
-  } */
   console.log(data);
   console.log(meals.length);
   // const meals = data.meals;
@@ -60,16 +52,21 @@ const displayData = (data) => {
   });
 };
 
-const loadMealDetails = (mealId) => {
+// load data by meal id
+const loadMealDetails = async (mealId) => {
   // console.log(mealId);
   const url = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`;
 
-  fetch(url)
-    .then((response) => response.json())
-    .then((data) => displayMealDetails(data.meals[0]))
-    .catch((error) => console.log(error));
+  const response = await fetch(url);
+  const data = await response.json();
+  displayMealDetails(data.meals[0]);
+
+  //   fetch(url)
+  //     .then((response) => response.json())
+  //     .then((data) => displayMealDetails(data.meals[0]));
 };
 
+// display data by meal id
 const displayMealDetails = (meal) => {
   // let meal = data.meals;
   console.log(meal);
