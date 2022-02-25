@@ -1,31 +1,36 @@
 document.getElementById("error-message").style.display = "none";
 const searchInput = document.getElementById("search-input");
+const mealsDiv = document.getElementById("meals");
+const mealDetails = document.getElementById("meal-details");
 // Load Data
 const loadData = () => {
   const searchInputValue = searchInput.value;
-  /*  if (searchInputValue === "") {
-    console.log("Please write food name");
-  } 
-  else{
-  
-  }*/
-  // Clear
-  searchInput.value = "";
-  document.getElementById("error-message").style.display = "none";
-  //   console.log(searchInputValue);
-  const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchInputValue}`;
-  fetch(url)
-    .then((response) => response.json())
-    .then((data) => displayData(data))
-    .catch((error) => displayError(error));
+  if (searchInputValue === "") {
+    // mealsDiv.textContent = "";
+    // mealDetails.textContent = "";
+    document.getElementById("error-message").innerText =
+      "Please enter food name";
+    document.getElementById("error-message").style.display = "block";
+  } else {
+    // Clear
+    searchInput.value = "";
+    document.getElementById("error-message").style.display = "none";
+    //   console.log(searchInputValue);
+    const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchInputValue}`;
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => displayData(data))
+      .catch((error) => displayError(error));
+  }
 };
 
 // loadData();
 
 // Error Display
-const displayError = (error)=>{
-  document.getElementById("error-message").style.display = "block";
-}
+const displayError = (error) => {
+  console.log(error);
+  // document.getElementById("error-message").style.display = "block";
+};
 
 // Display Data
 const displayData = (data) => {
@@ -33,9 +38,12 @@ const displayData = (data) => {
   const mealsDiv = document.getElementById("meals");
   mealsDiv.textContent = "";
 
-  /* if (meals.length == 0) {
-    // show no result found
-  } */
+  if (meals == null) {
+    console.log("Not Found");
+    document.getElementById("error-message").innerText =
+      "Search item not found";
+    document.getElementById("error-message").style.display = "block";
+  }
   console.log(data);
   console.log(meals.length);
   // const meals = data.meals;
@@ -74,6 +82,7 @@ const displayMealDetails = (meal) => {
   // let meal = data.meals;
   console.log(meal);
   const mealDetails = document.getElementById("meal-details");
+  mealDetails.style.display = "block";
   // Clear
   mealDetails.textContent = "";
   const cardDiv = document.createElement("div");
@@ -89,6 +98,7 @@ const displayMealDetails = (meal) => {
             ${mealDiscription.slice(0, 500)}
           </p>
           <div class="text-end">
+            <a class="btn btn-primary" onclick="closeMealDetails()" >Close</a>
             <a href="${
               meal.strYoutube
             }" class="btn btn-primary ">Watch Video</a>
@@ -98,6 +108,9 @@ const displayMealDetails = (meal) => {
   mealDetails.appendChild(cardDiv);
 };
 
+const closeMealDetails = () => {
+  mealDetails.style.display = "none";
+};
 //   console.log(data.meals);
 //   console.log(data.meals[0].idMeal);
 //   console.log(data.meals[0].strMeal);
